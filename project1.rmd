@@ -1,6 +1,5 @@
 ---
 title: "Project 1"
-always_allow_html: true 
 output:
   rmarkdown::github_document:
     toc: true
