@@ -302,7 +302,7 @@ datatable(dfpokeTampa)
 
 The table and histogram below shows the count for each position on the Tampa Bay Lightning. Center is the highest count so I assume this must be the most important position on the team or they are required more during the game. There's only 3 goalies and this makes sense as you only need one goalie while the game is going on.
 
-```{r echo=FALSE, message = FALSE}
+```{r echo=FALSE, message = FALSE, warning = FALSE}
 
 #Count for each position
 counttable <- table(dfpokeTampa$position.name)
