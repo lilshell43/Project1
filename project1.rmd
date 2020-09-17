@@ -1,32 +1,444 @@
 ---
-title: "Untitled"
+title: "Project 1"
 output:
+  html_document:
+    toc: yes
+    toc_float: yes              
   github_document: default
+  pdf_document:
+    toc: yes
   rmarkdown::github_document: default
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+#rmarkdown::render("project1.Rmd", params = "ask")
 ```
 
-## GitHub Documents
+```{r echo = FALSE, message = FALSE}
+#Connecting to NHL records API
 
-This is an R Markdown format used for publishing markdown documents to GitHub. When you click the **Knit** button all R code chunks are run and a markdown file (.md) suitable for publishing to GitHub is generated.
+# Install and packages.
 
-## Including Code
+library(httr)
+library(jsonlite)
+library(dplyr)
+library(ggplot2)
+library(DT)
+library(knitr)
+library(tidyverse)
 
-You can include R code in the document as follows:
+#connecting to the data (5 in total)
 
-```{r cars}
-summary(cars)
+# /franchise (Returns id, firstSeasonId and lastSeasonId and name of every team in the history of the NHL)
+base_url1 <- "https://records.nhl.com/site/api"
+tab_name1 <- "franchise"
+
+
+# Paste the pieces together like so:
+full_url1 <- paste0(base_url1, "/",tab_name1,"/")
+
+get_poke1 <- GET(full_url1)
+txt_poke1 <- content(get_poke1, "text")
+json_poke1 <- fromJSON(txt_poke1, flatten=TRUE)
+df_poke1 <- as.data.frame(json_poke1)
+
+#----------------------------------------
+
+# /franchise-team-totals (Returns Total stats for every franchise (ex roadTies, roadWins, etc))
+base_url2 <- "https://records.nhl.com/site/api"
+tab_name2 <- "franchise-team-totals"
+
+
+# Paste the pieces together like so:
+full_url2 <- paste0(base_url2, "/",tab_name2,"/")
+
+get_poke2 <- GET(full_url2)
+txt_poke2 <- content(get_poke2, "text")
+json_poke2 <- fromJSON(txt_poke2, flatten=TRUE)
+df_poke2 <- as.data.frame(json_poke2)
+
+#----------------------------------------
+
+# /site/api/franchise-season-records?cayenneExp=franchiseId=ID (Drill-down into season records for a specific franchise)
+
+full_url3 <- "https://records.nhl.com/site/api/franchise-season-records?cayenneExp=franchiseId=31"
+
+get_poke3 <- GET(full_url3)
+txt_poke3 <- content(get_poke3, "text")
+json_poke3 <- fromJSON(txt_poke3, flatten=TRUE)
+df_poke3 <- as.data.frame(json_poke3)
+
+#----------------------------------------
+
+# /franchise-goalie-records?cayenneExp=franchiseId=ID (Goalie records for the specified franchise)
+
+full_url4 <- "https://records.nhl.com/site/api/franchise-goalie-records?cayenneExp=franchiseId=1"
+
+get_poke4 <- GET(full_url4)
+txt_poke4 <- content(get_poke4, "text")
+json_poke4 <- fromJSON(txt_poke4, flatten=TRUE)
+df_poke4 <- as.data.frame(json_poke4)
+
+#----------------------------------------
+
+# /franchise-skater-records?cayenneExp=franchiseId=ID (Skater records, same interaction as goalie endpoint)
+
+full_url5 <- "https://records.nhl.com/site/api/franchise-skater-records?cayenneExp=franchiseId=1"
+
+get_poke5 <- GET(full_url5)
+txt_poke5 <- content(get_poke5, "text")
+json_poke5 <- fromJSON(txt_poke5, flatten=TRUE)
+df_poke5 <- as.data.frame(json_poke5)
+
 ```
 
-## Including Plots
 
-You can also embed plots, for example:
+```{r echo = FALSE, message = FALSE}
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+#Connecting to NHL records API (8 total)
+
+# ?expand=team.roster Shows roster of active players for the specified team
+full_url6 <- "https://statsapi.web.nhl.com/api/v1/teams?expand=team.roster"
+#tab_name6 <- "expand=team.roster"
+
+
+# Paste the pieces together like so:
+#full_url6 <- paste0(base_url6, "?",tab_name6,"/")
+
+get_poke6 <- GET(full_url6)
+txt_poke6 <- content(get_poke6, "text")
+json_poke6 <- fromJSON(txt_poke6, flatten=TRUE)
+df_poke6 <- as.data.frame(json_poke6)
+
+#----------------------------------------
+
+# ?expand=person.names Same as above, but gives less info.
+full_url7 <- "https://statsapi.web.nhl.com/api/v1/teams?expand=person.names"
+#tab_name7 <- "expand=person.names"
+
+
+# Paste the pieces together like so:
+#full_url7 <- paste0(base_url7, "?",tab_name7,"/")
+
+get_poke7 <- GET(full_url7)
+txt_poke7 <- content(get_poke7, "text")
+json_poke7 <- fromJSON(txt_poke7, flatten=TRUE)
+df_poke7 <- as.data.frame(json_poke7)
+
+#----------------------------------------
+
+# ?expand=team.schedule.next Returns details of the upcoming game for a team
+full_url8 <- "https://statsapi.web.nhl.com/api/v1/teams?expand=team.schedule.next"
+#tab_name8 <- "expand=team.schedule.next"
+
+
+# Paste the pieces together like so:
+#full_url8 <- paste0(base_url8, "?",tab_name8,"/")
+
+get_poke8 <- GET(full_url8)
+txt_poke8 <- content(get_poke8, "text")
+json_poke8 <- fromJSON(txt_poke8, flatten=TRUE)
+df_poke8 <- as.data.frame(json_poke8)
+
+#----------------------------------------
+
+# ?expand=team.schedule.previous Same as above but for the last game played
+full_url9 <- "https://statsapi.web.nhl.com/api/v1/teams?expand=team.schedule.previous"
+#tab_name9 <- "expand=team.schedule.previous"
+
+
+# Paste the pieces together like so:
+#full_url9 <- paste0(base_url9, "?",tab_name9,"/")
+
+get_poke9 <- GET(full_url9)
+txt_poke9 <- content(get_poke9, "text")
+json_poke9 <- fromJSON(txt_poke9, flatten=TRUE)
+df_poke9 <- as.data.frame(json_poke9)
+
+#----------------------------------------
+
+# ?expand=team.stats Returns the teams stats for the season
+full_url10 <- "https://statsapi.web.nhl.com/api/v1/teams?expand=team.stats"
+#tab_name10 <- "expand=team.stats"
+
+
+# Paste the pieces together like so:
+#full_url10 <- paste0(base_url10, "?",tab_name10,"/")
+
+get_poke10 <- GET(full_url10)
+txt_poke10 <- content(get_poke10, "text")
+json_poke10 <- fromJSON(txt_poke10, flatten=TRUE)
+df_poke10 <- as.data.frame(json_poke10)
+
+#----------------------------------------
+
+# ?expand=team.roster&season=20142015 Adding the season identifier shows the roster for that season
+full_url11 <- "https://statsapi.web.nhl.com/api/v1/teams?expand=team.roster&season=20142015"
+
+get_poke11 <- GET(full_url11)
+txt_poke11 <- content(get_poke11, "text")
+json_poke11 <- fromJSON(txt_poke11, flatten=TRUE)
+df_poke11 <- as.data.frame(json_poke11)
+
+#----------------------------------------
+
+# ?teamId=4,5,29 Can string team id together to get multiple teams
+full_url12 <- "https://statsapi.web.nhl.com/api/v1/teams?teamId=4,5,29"
+
+get_poke12 <- GET(full_url12)
+txt_poke12 <- content(get_poke12, "text")
+json_poke12 <- fromJSON(txt_poke12, flatten=TRUE)
+df_poke12 <- as.data.frame(json_poke12)
+
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+```{r echo = FALSE}
+# wrapper function to choose any endpoint
+wrapperfunct <- function(x) {
+  if (franchise) {
+  return(df_poke1)
+
+    } else if (franchise-team-totals) {
+  return(df_poke2)
+
+      } else if (franchise-season-records) {
+  return(df_poke3)
+
+        } else if (franchise-goalie-records) {
+  return(df_poke4)
+
+          } else if (franchise-skater-records) {
+  return(df_poke5) 
+
+            } else if (team.roster) {
+  return(df_poke6)
+
+              } else if (person.names) {
+  return(df_poke7)
+
+                } else if (team.schedule.next) {
+  return(df_poke8)
+
+                  } else if (team.schedule.previous) {
+  return(df_poke9) 
+             
+                     } else if (team.stats) {
+  return(df_poke10)
+               
+                        } else if (team.roster&season) {
+  return(df_poke11)
+                 
+                           } else if (teamId) {
+  return(df_poke12) 
+} 
+}
+
+```
+
+
+## NHL
+
+##### What is NHL
+
+NHL stands for _National Hockey League_ and currently has 31 teams. My knowledge on the NHL is very small so first I wanted to know the teams with the most wins and the most losses. To view the updated season, check [this website](https://www.nhl.com).
+
+## Top Total Wins/Losses
+
+From looking at the bar charts, Montreal Canadiens has the most wins. An interesting analysis I found is that Boston Bruins have the 2nd most total wins but they have the 5th most losses. This makes me assume the franchise was around longer than other teams as it's in 2nd place for most games played. If I were to choose to watch a team, it would be Montreal Canadiens as they aren't on the Top 5 Losses list. This makes me believe they are the most successful franchise.
+
+```{r echo=FALSE, message = FALSE}
+
+# Top 5 Hockey teams with most wins
+bestteams  <- group_by(df_poke2, data.teamName)
+bestteams  <-  arrange(bestteams, desc(data.wins))
+bestteams <- bestteams[1:5,]
+
+j <- ggplot(bestteams, aes(x = reorder(data.teamName, -data.wins), y = data.wins))
+j + geom_bar(stat = "identity")  +
+  labs(x = "Hockey Teams", y = "Total Wins") +
+     geom_text(aes(label=data.wins), position=position_dodge(width=0.9), vjust=-0.25) +
+        ggtitle("Top 5 Hockey Teams with Most Wins")
+
+# Top 5 Hockey teams with most losses
+worstteams  <- group_by(df_poke2, data.teamName)
+worstteams  <-  arrange(worstteams, desc(data.losses))
+worstteams <- worstteams[1:5,]
+
+k <- ggplot(worstteams, aes(x = reorder(data.teamName, -data.losses), y = data.losses))
+k + geom_bar(stat = "identity")  +
+  labs(x = "Hockey Teams", y = "Total Losses") +
+     geom_text(aes(label=data.losses), position=position_dodge(width=0.9), vjust=-0.25) +
+        ggtitle("Top 5 Hockey Teams with Most Losses")
+
+# Top 5 Hockey teams Games Played
+gpteams  <- group_by(df_poke2, data.teamName)
+gpteams  <-  arrange(gpteams, desc(data.gamesPlayed))
+gpteams <- gpteams[1:5,]
+
+l <- ggplot(gpteams, aes(x = reorder(data.teamName, -data.gamesPlayed), y = data.gamesPlayed))
+l + geom_bar(stat = "identity")  +
+  labs(x = "Hockey Teams", y = "Games Played") +
+     geom_text(aes(label=data.gamesPlayed), position=position_dodge(width=0.9), vjust=-0.25) +
+        ggtitle("Top 5 Hockey Teams Games Played")
+
+```
+
+## Tampa Bay Lightning
+
+I currently reside in Tampa, Florida; so I did an analysis on the _Tampa Bay Lightning_.Here is the roster for the current season.The roster has a total of 27 active players. 
+
+__Active Roster__
+```{r echo=FALSE, message = FALSE}
+
+dfpokeTampa <-  filter(df_poke6, teams.name == "Tampa Bay Lightning")
+dfpokeTampa <- as.data.frame(dfpokeTampa$teams.roster.roster)
+dfpokeTampa <- select(dfpokeTampa, jerseyNumber, person.fullName, position.name, position.type)
+datatable(dfpokeTampa)
+
+```
+
+
+The table and histogram below shows the count for each position on the Tampa Bay Lightning. Center is the highest count so I assume this must be the most important position on the team or they are required more during the game. There's only 3 goalies and this makes sense as you only need one goalie while the game is going on.
+
+```{r echo=FALSE, message = FALSE}
+
+#Count for each position
+counttable <- table(dfpokeTampa$position.name)
+
+#table
+kable(counttable, col.names = c("Position", "Count"),caption = "Tampa Bay Lightning Position Name Count")
+
+#histogram
+a <- ggplot(dfpokeTampa, aes(position.name))
+a + geom_histogram(binwidth = 5, stat = "count")
+
+```
+
+
+
+
+The table below shows the percentages for win, losses, and ot for the Tampa Bay Lightning for the recent season. Since it is above 0.50, this means the team is on the right track as they are winning more games than losing or getting ot. To view their updated season, check [this website](https://www.nhl.com/lightning).
+
+```{r echo=FALSE, message = FALSE, warning = FALSE}
+
+dfpokeTampa2 <-  filter(df_poke10, teams.name == "Tampa Bay Lightning")
+dfpokeTampa2 <- as.data.frame(dfpokeTampa2$teams.teamStats)
+dfpokeTampa2 <- as.data.frame(dfpokeTampa2$splits)
+
+# create 2 new variables for win percentage and loss percentage
+
+
+dfpokeTampawinloss <- transmute(dfpokeTampa2,
+  Win_Percentage = as.integer(stat.wins) / stat.gamesPlayed,
+  Loss_Percentage = as.integer(stat.losses) / stat.gamesPlayed,
+  OT_Percentage = as.integer(stat.ot) / stat.gamesPlayed
+)
+ 
+kable(dfpokeTampawinloss[1,], caption = "Tampa Bay Lightning Win/Loss Percentage")
+
+```
+
+## Tampa Bay vs Atlanta Division Teams
+
+Tampa Bay Lightning is in the Atlantic Division along with 7 other teams. Let's see the Atlantic Division stats compared to each other.The median seems to be around 33 and out of a season of 70 games, the median for Atlantic Division could use some improvement overall.There's a max of 44 by Boston Bruins which means they're doing well. Detroit has 17 wins which makes them a very weak team.
+
+```{r echo=FALSE, message = FALSE, warning = FALSE}
+
+dfpokeTampaBay2 <- dfpokeTampa2[1,]
+
+#Boston Bruins Stats
+dfpokeBoston2 <-  filter(df_poke10, teams.name == "Boston Bruins")
+dfpokeBoston2 <- as.data.frame(dfpokeBoston2$teams.teamStats)
+dfpokeBoston2 <- as.data.frame(dfpokeBoston2$splits)
+dfpokeBoston2 <- dfpokeBoston2[1,]
+
+#Toronto Maple Leafs
+dfpokeToronto2 <-  filter(df_poke10, teams.name == "Toronto Maple Leafs")
+dfpokeToronto2 <- as.data.frame(dfpokeToronto2$teams.teamStats)
+dfpokeToronto2 <- as.data.frame(dfpokeToronto2$splits)
+dfpokeToronto2 <- dfpokeToronto2[1,]
+
+#Florida Panthers
+dfpokeFL2 <-  filter(df_poke10, teams.name == "Florida Panthers")
+dfpokeFL2 <- as.data.frame(dfpokeFL2$teams.teamStats)
+dfpokeFL2 <- as.data.frame(dfpokeFL2$splits)
+dfpokeFL2 <- dfpokeFL2[1,]
+
+#Montreal Canadiens
+dfpokeMontreal2 <-  filter(df_poke10, teams.name == "Montréal Canadiens")
+dfpokeMontreal2 <- as.data.frame(dfpokeMontreal2$teams.teamStats)
+dfpokeMontreal2 <- as.data.frame(dfpokeMontreal2$splits)
+dfpokeMontreal2 <- dfpokeMontreal2[1,]
+
+#Buffalo Sabres
+dfpokeBuffalo2 <-  filter(df_poke10, teams.name == "Buffalo Sabres")
+dfpokeBuffalo2 <- as.data.frame(dfpokeBuffalo2$teams.teamStats)
+dfpokeBuffalo2 <- as.data.frame(dfpokeBuffalo2$splits)
+dfpokeBuffalo2 <- dfpokeBuffalo2[1,]
+
+#Ottawa Senators
+dfpokeOttawa2 <-  filter(df_poke10, teams.name == "Ottawa Senators")
+dfpokeOttawa2 <- as.data.frame(dfpokeOttawa2$teams.teamStats)
+dfpokeOttawa2 <- as.data.frame(dfpokeOttawa2$splits)
+dfpokeOttawa2 <- dfpokeOttawa2[1,]
+
+#Detroit Red Wings
+dfpokeDetroit2 <-  filter(df_poke10, teams.name == "Detroit Red Wings")
+dfpokeDetroit2 <- as.data.frame(dfpokeDetroit2$teams.teamStats)
+dfpokeDetroit2 <- as.data.frame(dfpokeDetroit2$splits)
+dfpokeDetroit2 <- dfpokeDetroit2[1,]
+
+#Union all Atlantic Division teams together
+atldivision <- union(dfpokeBoston2, dfpokeTampaBay2)
+
+atldivision <- union(atldivision, dfpokeToronto2)
+atldivision <- union(atldivision, dfpokeFL2)
+atldivision <- union(atldivision, dfpokeMontreal2)
+atldivision <- union(atldivision, dfpokeBuffalo2)
+atldivision <- union(atldivision, dfpokeOttawa2)
+atldivision <- union(atldivision, dfpokeDetroit2)
+
+atldivision <- mutate(atldivision,
+                      season = "2019-2020")
+
+boxplot(as.integer(stat.wins)~season,
+        data = atldivision,
+        main="Atlantic Division Wins",
+        xlab="2019-2020 Season",
+        ylab="Wins",
+        col="orange",
+        border="brown"
+)
+
+
+```
+
+From the plot below, we can see a trend that the higher the percentage is that you out shoot the opponent, the higher wins you will get. 
+
+```{r  echo=FALSE, message = FALSE, warning = FALSE}
+#Join to get team abbreviation
+
+#Create Table for Team Id and Abbreviation
+df_poke2abrv <- select(df_poke2, data.teamId, data.triCode)
+# Delete Duplicate Rows
+todelete <- seq(1, nrow(df_poke2abrv), 2)
+df_poke2abrv <- df_poke2abrv[ todelete ,]
+df_poke2abrv <- rename(df_poke2abrv, "team.id" = "data.teamId")
+
+#Join
+atldivision <- left_join(atldivision, df_poke2abrv, by = "team.id")
+atldivision <- rename(atldivision, "Tri Code" = "data.triCode")
+
+
+atldivision$team.name <- as.factor(atldivision$team.name)
+f <- ggplot(atldivision, aes(stat.winOutshootOpp, stat.wins, colour=`Tri Code`))
+f + geom_point() +
+  xlab("Win % By Out Shooting Opponent") +
+  ylab("Wins") +
+  ggtitle("Wins by Out Shooting Opponent") + 
+  scale_fill_discrete(name = "Teams")  +     
+   geom_smooth(method = 'lm', color = 'green')
+```
+
