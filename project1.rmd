@@ -1,13 +1,16 @@
 ---
 title: "Project 1"
+always_allow_html: true 
 output:
-  html_document:
-    toc: yes
-    toc_float: yes              
-  github_document: default
+  rmarkdown::github_document:
+    toc: true
+    toc_depth: 2
   pdf_document:
     toc: yes
-  rmarkdown::github_document: default
+  html_document:
+    toc: yes
+    toc_float: yes  
+           
 ---
 
 ```{r setup, include=FALSE}
