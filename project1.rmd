@@ -297,7 +297,11 @@ __Active Roster__
 dfpokeTampa <-  filter(df_poke6, teams.name == "Tampa Bay Lightning")
 dfpokeTampa <- as.data.frame(dfpokeTampa$teams.roster.roster)
 dfpokeTampa <- select(dfpokeTampa, jerseyNumber, person.fullName, position.name, position.type)
-# datatable(dfpokeTampa)
+dfpokeTampa3 <- rename(dfpokeTampa, "Jersey Number" = "jerseyNumber")
+dfpokeTampa3 <- rename(dfpokeTampa3, "Full Name" = "person.fullName")
+dfpokeTampa3 <- rename(dfpokeTampa3, "Position Name" = "position.name")
+dfpokeTampa3 <- rename(dfpokeTampa3, "Position Type" = "position.type")
+knitr::kable(dfpokeTampa3)
 
 ```
 

@@ -36,6 +36,36 @@ a total of 27 active players.
 
 **Active Roster**
 
+| Jersey Number | Full Name          | Position Name | Position Type |
+| :------------ | :----------------- | :------------ | :------------ |
+| 35            | Curtis McElhinney  | Goalie        | Goalie        |
+| 55            | Braydon Coburn     | Defenseman    | Defenseman    |
+| 17            | Alex Killorn       | Left Wing     | Forward       |
+| 22            | Kevin Shattenkirk  | Defenseman    | Defenseman    |
+| 14            | Pat Maroon         | Left Wing     | Forward       |
+| 27            | Ryan McDonagh      | Defenseman    | Defenseman    |
+| 91            | Steven Stamkos     | Center        | Forward       |
+| 24            | Zach Bogosian      | Defenseman    | Defenseman    |
+| 2             | Luke Schenn        | Defenseman    | Defenseman    |
+| 9             | Tyler Johnson      | Center        | Forward       |
+| 77            | Victor Hedman      | Defenseman    | Defenseman    |
+| 29            | Scott Wedgewood    | Goalie        | Goalie        |
+| 18            | Ondrej Palat       | Left Wing     | Forward       |
+| 20            | Blake Coleman      | Center        | Forward       |
+| 86            | Nikita Kucherov    | Right Wing    | Forward       |
+| 19            | Barclay Goodrow    | Center        | Forward       |
+| 37            | Yanni Gourde       | Center        | Forward       |
+| 88            | Andrei Vasilevskiy | Goalie        | Goalie        |
+| 13            | Cedric Paquette    | Center        | Forward       |
+| 23            | Carter Verhaeghe   | Center        | Forward       |
+| 21            | Brayden Point      | Center        | Forward       |
+| 81            | Erik Cernak        | Defenseman    | Defenseman    |
+| 7             | Mathieu Joseph     | Right Wing    | Forward       |
+| 67            | Mitchell Stephens  | Center        | Forward       |
+| 71            | Anthony Cirelli    | Center        | Forward       |
+| 98            | Mikhail Sergachev  | Defenseman    | Defenseman    |
+| 44            | Jan Rutta          | Defenseman    | Defenseman    |
+
 The table and histogram below shows the count for each position on the
 Tampa Bay Lightning. Center is the highest count so I assume this must
 be the most important position on the team or they are required more
