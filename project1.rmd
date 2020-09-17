@@ -297,7 +297,7 @@ __Active Roster__
 dfpokeTampa <-  filter(df_poke6, teams.name == "Tampa Bay Lightning")
 dfpokeTampa <- as.data.frame(dfpokeTampa$teams.roster.roster)
 dfpokeTampa <- select(dfpokeTampa, jerseyNumber, person.fullName, position.name, position.type)
-datatable(dfpokeTampa)
+# datatable(dfpokeTampa)
 
 ```
 

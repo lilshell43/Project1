@@ -34,15 +34,7 @@ I currently reside in Tampa, Florida; so I did an analysis on the *Tampa
 Bay Lightning*.Here is the roster for the current season.The roster has
 a total of 27 active players.
 
-**Active Roster** <!--html_preserve-->
-
-<div id="htmlwidget-3de648939375769ac115" class="datatables html-widget" style="width:100%;height:auto;">
-
-</div>
-
-<script type="application/json" data-for="htmlwidget-3de648939375769ac115">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27"],["35","55","17","22","14","27","91","24","2","9","77","29","18","20","86","19","37","88","13","23","21","81","7","67","71","98","44"],["Curtis McElhinney","Braydon Coburn","Alex Killorn","Kevin Shattenkirk","Pat Maroon","Ryan McDonagh","Steven Stamkos","Zach Bogosian","Luke Schenn","Tyler Johnson","Victor Hedman","Scott Wedgewood","Ondrej Palat","Blake Coleman","Nikita Kucherov","Barclay Goodrow","Yanni Gourde","Andrei Vasilevskiy","Cedric Paquette","Carter Verhaeghe","Brayden Point","Erik Cernak","Mathieu Joseph","Mitchell Stephens","Anthony Cirelli","Mikhail Sergachev","Jan Rutta"],["Goalie","Defenseman","Left Wing","Defenseman","Left Wing","Defenseman","Center","Defenseman","Defenseman","Center","Defenseman","Goalie","Left Wing","Center","Right Wing","Center","Center","Goalie","Center","Center","Center","Defenseman","Right Wing","Center","Center","Defenseman","Defenseman"],["Goalie","Defenseman","Forward","Defenseman","Forward","Defenseman","Forward","Defenseman","Defenseman","Forward","Defenseman","Goalie","Forward","Forward","Forward","Forward","Forward","Goalie","Forward","Forward","Forward","Defenseman","Forward","Forward","Forward","Defenseman","Defenseman"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>jerseyNumber<\/th>\n      <th>person.fullName<\/th>\n      <th>position.name<\/th>\n      <th>position.type<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script>
-
-<!--/html_preserve-->
+**Active Roster**
 
 The table and histogram below shows the count for each position on the
 Tampa Bay Lightning. Center is the highest count so I assume this must
